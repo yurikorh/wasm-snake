@@ -31,7 +31,7 @@ void input(context *ctx)
     }
 }
 
-void drawRect(context *ctx, Vec2c pos, Scalar s)
+void drawApple(context *ctx, Vec2c pos, Scalar s)
 {
     SDL_Rect rect;
 
@@ -43,26 +43,70 @@ void drawRect(context *ctx, Vec2c pos, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
-void drawRect(context *ctx, Vec2c pos, bool direction,  Scalar s)
+void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
-    static bool last;
-    SDL_Rect rect;
+    static int8_t lastdir = 0;
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
-    if(direction != last) 
+    Vec2c pos = ctx->snake->getCoordinate(ptr);
+    SDL_Rect rect = { pos.x * 50, pos.y * 50, 50, 50 };
+    int8_t dir = *ptr;
+    if(dir == lastdir)
     {
-        rect = {pos.x * 50, pos.y * 50, 50, 50};
-    }
-    else if(direction)
-    {
-        rect = {pos.x * 50, pos.y * 50 + 2, 50, 50 - 4};
+        if(dir == 1 || dir == -1)
+        {
+            rect.y += 2;
+            rect.h -= 4;
+        }
+        else
+        {
+            rect.x += 2;
+            rect.w -= 4;
+        }
     }
     else
     {
-        rect = {pos.x * 50 + 2, pos.y * 50, 50 - 4, 50};
+        if(lastdir == -1)
+        {
+            rect.x += 2;
+            rect.w -= 2;
+        }
+        else if(lastdir == 1)
+        {
+            rect.w -= 2;
+        }
+        else if(lastdir < -1)
+        {
+            rect.y += 2;
+            rect.h -= 2;
+        }
+        else
+        {
+            rect.h -=2;
+        }
+
+        if(dir == -1)
+        {
+            rect.w -= 2;
+        }   
+        else if(dir == 1)
+        {
+            rect.x += 2;
+            rect.w -= 2;
+        }
+        else if(dir < -1)
+        {
+            rect.h -= 2;
+        }
+        else
+        {
+            rect.y += 2;
+            rect.h -= 2;
+        }
     }
-    last = direction;
+    lastdir = dir;
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
+
 void drawHead(context *ctx, Scalar s0, Scalar s1)
 {
     RenderIns renderIns = ctx->ris[0];
@@ -99,6 +143,17 @@ void drawTail(context *ctx, Scalar s)
     y = y * 50 / duration;
 
     SDL_Rect rect = {x, y, 50, 50};
+
+    if(*(ctx->snake->tail) == 1 || *(ctx->snake->tail) == -1) 
+    {
+        rect.y += 2;
+        rect.h -= 4;
+    }
+    else
+    {
+        rect.x += 2;
+        rect.w -= 4;
+    }
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
@@ -112,18 +167,19 @@ void drawSnake(context *ctx)
     int8_t* ptr = ctx->snake->tail;
     while(ptr != ctx->snake->head)
     {
-        if(*ptr == 1 || *ptr == -1)
-        {
-            drawRect(ctx, ctx->snake->getCoordinate(ptr), true, bodyColor);
-        }
-        else
-        {
-            drawRect(ctx, ctx->snake->getCoordinate(ptr), false, bodyColor);    
-        }
+        drawBody(ctx, ptr, bodyColor);
+        // if(*ptr == 1 || *ptr == -1)
+        // {
+        //     drawRect(ctx, ctx->snake->getCoordinate(ptr), true, bodyColor);
+        // }
+        // else
+        // {
+        //     drawRect(ctx, ctx->snake->getCoordinate(ptr), false, bodyColor);    
+        // }
         ptr += *ptr;
     }
 
-    drawRect(ctx, ctx->snake->applePos, appleColor);
+    drawApple(ctx, ctx->snake->applePos, appleColor);
     
     drawHead(ctx, HeadColor, bodyColor);
     
