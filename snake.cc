@@ -142,12 +142,9 @@ Vec2c Snake::getApple()
             int offset = y * this->mapWidth + x;
             if (this->map[offset] == Ground)
             {
-                if (appleIndex == 0 || --appleIndex == 0)
+                if (appleIndex-- == 0)
                 {
-                    // std::cout << "Coordinates: " << this->getCoordinate(offset)
-                    //           << "orign: " << static_cast<int>(this->map[offset]) << std::endl;
                     this->map[offset] = Apple;
-                    // std::cout << "Generating apple at: " << Vec2c(x, y) << std::endl;
                     return Vec2c(x, y);
                 }
             }
