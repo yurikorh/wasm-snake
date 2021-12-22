@@ -21,3 +21,4 @@ You'll need a http server like [Live Server](https://marketplace.visualstudio.co
 
 ## Demo
 
+https://yurikorh.github.io/wasm-snake/
