@@ -43,9 +43,9 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
+static int8_t lastdir;
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
-{
-    static int8_t lastdir = 0;
+{  
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
     SDL_Rect rect = { pos.x * 50, pos.y * 50, 50, 50 };
@@ -165,17 +165,10 @@ void drawSnake(context *ctx)
     Scalar HeadColor = Scalar(255, 135, 202);
 
     int8_t* ptr = ctx->snake->tail;
+    lastdir = *ptr;
     while(ptr != ctx->snake->head)
     {
         drawBody(ctx, ptr, bodyColor);
-        // if(*ptr == 1 || *ptr == -1)
-        // {
-        //     drawRect(ctx, ctx->snake->getCoordinate(ptr), true, bodyColor);
-        // }
-        // else
-        // {
-        //     drawRect(ctx, ctx->snake->getCoordinate(ptr), false, bodyColor);    
-        // }
         ptr += *ptr;
     }
 
