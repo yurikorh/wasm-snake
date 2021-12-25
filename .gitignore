@@ -31,3 +31,9 @@
 *.out
 *.app
 
+# VSCode Configuration
+.vscode
+
+# Tests
+test
+

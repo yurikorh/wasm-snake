@@ -1,34 +1,43 @@
 #include "web.hh"
 
-void input(context *ctx)
+static gs_step steps[4];
+gs_step input()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        switch (event.type)
+        if(event.type == SDL_KEYDOWN)
         {
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym)
+            int32_t index = event.key.keysym.sym - SDLK_RIGHT;
+            if(index >= 0 && index < 4)
             {
-            case SDLK_UP:
-                ctx->snake->setStep(ctx->snake->getStepUp());
-                break;
-            case SDLK_DOWN:
-                ctx->snake->setStep(ctx->snake->getStepDown());
-                break;
-            case SDLK_LEFT:
-                ctx->snake->setStep(ctx->snake->getStepLeft());
-                break;
-            case SDLK_RIGHT:
-                ctx->snake->setStep(ctx->snake->getStepRight());
-                break;
-            default:
-                break;
+                // 0: right 1: left 2: down 3: up
+                return steps[index];
             }
-        default:
-            break;
         }
     }
+
+    // switch (event.key.keysym.sym)
+    // {
+    // case SDLK_UP:
+    //     ctx->snake->setStep(ctx->snake->getStepUp());
+    //     break;
+    // case SDLK_DOWN:
+    //     ctx->snake->setStep(ctx->snake->getStepDown());
+    //     break;
+    // case SDLK_LEFT:
+    //     ctx->snake->setStep(ctx->snake->getStepLeft());
+    //     break;
+    // case SDLK_RIGHT:
+    //     ctx->snake->setStep(ctx->snake->getStepRight());
+    //     break;
+    // default:
+    //     break;
+    // }
+
+
+    return 0;
+
 }
 
 void drawApple(context *ctx, Vec2c pos, Scalar s)
@@ -36,7 +45,7 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
     SDL_Rect rect;
 
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
-    rect.x = (pos.x) * 50 ;
+    rect.x = (pos.x) * 50;
     rect.y = (pos.y) * 50;
     rect.w = 50;
     rect.h = 50;
@@ -45,14 +54,14 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
 
 static int8_t lastdir;
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
-{  
+{
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
-    SDL_Rect rect = { pos.x * 50, pos.y * 50, 50, 50 };
+    SDL_Rect rect = {pos.x * 50, pos.y * 50, 50, 50};
     int8_t dir = *ptr;
-    if(dir == lastdir)
+    if (dir == lastdir)
     {
-        if(dir == 1 || dir == -1)
+        if (dir == 1 || dir == -1)
         {
             rect.y += 2;
             rect.h -= 4;
@@ -65,35 +74,35 @@ void drawBody(context *ctx, int8_t *ptr, Scalar s)
     }
     else
     {
-        if(lastdir == -1)
+        if (lastdir == -1)
         {
             rect.x += 2;
             rect.w -= 2;
         }
-        else if(lastdir == 1)
+        else if (lastdir == 1)
         {
             rect.w -= 2;
         }
-        else if(lastdir < -1)
+        else if (lastdir < -1)
         {
             rect.y += 2;
             rect.h -= 2;
         }
         else
         {
-            rect.h -=2;
+            rect.h -= 2;
         }
 
-        if(dir == -1)
+        if (dir == -1)
         {
             rect.w -= 2;
-        }   
-        else if(dir == 1)
+        }
+        else if (dir == 1)
         {
             rect.x += 2;
             rect.w -= 2;
         }
-        else if(dir < -1)
+        else if (dir < -1)
         {
             rect.h -= 2;
         }
@@ -144,7 +153,7 @@ void drawTail(context *ctx, Scalar s)
 
     SDL_Rect rect = {x, y, 50, 50};
 
-    if(*(ctx->snake->tail) == 1 || *(ctx->snake->tail) == -1) 
+    if (*(ctx->snake->tail) == 1 || *(ctx->snake->tail) == -1)
     {
         rect.y += 2;
         rect.h -= 4;
@@ -164,18 +173,18 @@ void drawSnake(context *ctx)
     Scalar appleColor = Scalar(238, 215, 206);
     Scalar HeadColor = Scalar(255, 135, 202);
 
-    int8_t* ptr = ctx->snake->tail;
+    int8_t *ptr = ctx->snake->tail;
     lastdir = *ptr;
-    while(ptr != ctx->snake->head)
+    while (ptr != ctx->snake->head)
     {
         drawBody(ctx, ptr, bodyColor);
         ptr += *ptr;
     }
 
     drawApple(ctx, ctx->snake->applePos, appleColor);
-    
+
     drawHead(ctx, HeadColor, bodyColor);
-    
+
     drawTail(ctx, bodyColor);
 }
 void draw(context *ctx)
@@ -189,7 +198,6 @@ void draw(context *ctx)
 
 void gameOver(context *ctx)
 {
-
 }
 
 void mainloop(void *arg)
@@ -197,13 +205,12 @@ void mainloop(void *arg)
     context *ctx = (context *)arg;
     // std::cout << "Mat data: " << *(ctx->snake) << std::endl;
     ctx->now = SDL_GetTicks();
-    input(ctx);
 
     if (ctx->now - ctx->start > ctx->duration)
     {
         ctx->start = ctx->now;
-
-        ctx->ris = ctx->snake->tick();
+        gs_step step = input();
+        ctx->ris = ctx->snake->tick(step);
     }
     if (ctx->ris.size() == 0)
     {
@@ -218,6 +225,7 @@ void mainloop(void *arg)
 
 int main()
 {
+
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window *window;
@@ -227,6 +235,12 @@ int main()
     SDL_CreateWindowAndRenderer(cols * 50, rows * 50, 0, &window, &renderer);
 
     Snake snake = Snake(cols, rows);
+
+    steps[0] = snake.getStepRight();
+    steps[1] = snake.getStepLeft();
+    steps[2] = snake.getStepDown();
+    steps[3] = snake.getStepUp();
+    
     std::vector<RenderIns> Rins = std::vector<RenderIns>();
     int start = SDL_GetTicks();
     int duration = 175;

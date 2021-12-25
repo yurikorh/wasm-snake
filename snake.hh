@@ -43,10 +43,10 @@ public:
     gs_step getStepDown();
     gs_step getStepLeft();
     gs_step getStepRight();
-    void setStep(gs_step step);
+
     Vec2c getCoordinate(int offset);
     Vec2c getCoordinate(int8_t *pointer);
-    std::vector<RenderIns> tick();
+    std::vector<RenderIns> tick(gs_step input);
     int size();
     int8_t getValueAt(int8_t x, int8_t y);
     Vec2c applePos;
@@ -72,7 +72,6 @@ private:
     int *apples;
     int *nextApple;
     int8_t step;
-    std::queue<int8_t> stepBuffer;
     
     int getBits(int i);
     Vec2c getApple();

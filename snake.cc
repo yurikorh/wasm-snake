@@ -35,7 +35,7 @@ Snake::Snake(int cols, int rows, int length = 3)
         *p = this->getStepRight();
 
     this->step = this->getStepRight();
-    // this->stepBuffer.push(this->getStepRight());
+
     initRandomApples(length + 1);
     this->applePos = this->getApple();
 }
@@ -56,16 +56,12 @@ int Snake::getBits(int i)
     return bits;
 }
 
-std::vector<RenderIns> Snake::tick()
+std::vector<RenderIns> Snake::tick(gs_step input)
 {
- 
-    if(!this->stepBuffer.empty())
+    if (input && input != this->step && input != -this->step)
     {
-        this->step = this->stepBuffer.front(); 
-        stepBuffer.pop();
+        this->step = input;
     }
-    
-
     int8_t *headDst = this->head + this->step;
 
     std::vector<RenderIns> res;
@@ -189,19 +185,4 @@ gs_step Snake::getStepLeft()
 gs_step Snake::getStepRight()
 {
     return 1;
-}
-
-/**
- * @brief try set step
- *
- * @param step values gotten by calling getStepUp(),
- *  getStepDown(), getStepLeft() or getStepRight
- */
-void Snake::setStep(gs_step step)
-{
-    // steps in the same axis are whether equal or opposite
-    if (step != this->step && step != -this->step)
-    {
-        this->stepBuffer.push(step);
-    }
 }
