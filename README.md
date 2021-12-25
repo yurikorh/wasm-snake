@@ -2,7 +2,7 @@
 
 Snake in C++ for WebAssembly
 
-This is a primitive greedy snake game in C++ish to test WebAssembly
+This is a primitive greedy snake game demo in C++(ish) to test WebAssembly
 
 ## Getting Started
 
@@ -19,6 +19,9 @@ emcc web.cc snake.cc -s USE_SDL=2 -s ASSERTIONS=1 -s SAFE_HEAP=1 -s TOTAL_MEMORY
 You'll need a http server like [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) to view the result, or you can use    
 `python3 -m http.server`.
 
+### Notes    
+ 
+SDL2 API reference can be found at [SDL Wiki](https://wiki.libsdl.org/APIByCategory)
 
 ## Demo
 
