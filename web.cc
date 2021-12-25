@@ -17,25 +17,6 @@ gs_step input()
         }
     }
 
-    // switch (event.key.keysym.sym)
-    // {
-    // case SDLK_UP:
-    //     ctx->snake->setStep(ctx->snake->getStepUp());
-    //     break;
-    // case SDLK_DOWN:
-    //     ctx->snake->setStep(ctx->snake->getStepDown());
-    //     break;
-    // case SDLK_LEFT:
-    //     ctx->snake->setStep(ctx->snake->getStepLeft());
-    //     break;
-    // case SDLK_RIGHT:
-    //     ctx->snake->setStep(ctx->snake->getStepRight());
-    //     break;
-    // default:
-    //     break;
-    // }
-
-
     return 0;
 
 }
