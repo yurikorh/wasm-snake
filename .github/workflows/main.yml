@@ -1,0 +1,44 @@
+name: build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ubuntu1804:
+    runs-on: ubuntu-18.04
+
+    steps:
+      # 检出代码
+      - uses: actions/checkout@v2
+
+      # 检出emsdk
+      - name: checkout emsdk
+        uses: actions/checkout@v2
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+          submodules: recursive
+          
+      # 编译emsdk
+      - name: build emsdk
+        run: |
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+
+      # 编译项目
+      - name: build snake
+        run: |
+          cd ..
+          ./build.sh
+      # install文件夹改名linux，并使用7z压缩
+      - name: 7zip
+        run: |
+          7z a snake.7z docs
+
+      # 上传artifact
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: snake
+          path: snake.7z
