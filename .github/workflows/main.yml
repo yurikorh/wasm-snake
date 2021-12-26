@@ -25,11 +25,11 @@ jobs:
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
-          source ./emsdk_env.sh
 
       # 编译项目
       - name: build snake
         run: |
+          source ./emsdk/emsdk_env.sh
           chmod +x build.sh
           ./build.sh
       # install文件夹改名linux，并使用7z压缩
