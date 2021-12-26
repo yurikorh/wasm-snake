@@ -62,7 +62,7 @@ public:
     Vec2c applePos;
     int8_t *head;
     int8_t *tail;
-
+    static GS_DIRECTION getDirection(GS_STEP);
     friend std::ostream& operator<<(std::ostream& os, Snake o)
     {
         for(int row = 0; row < o.rows; ++row)

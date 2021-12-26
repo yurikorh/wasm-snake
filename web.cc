@@ -32,36 +32,52 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
-// static int8_t lastdir;
+SDL_Rect rectRight(Vec2c pos) {
+    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 + 2,  50, 50 - 4};
+    return rect;
+}
+SDL_Rect rectLeft(Vec2c pos) {
+    SDL_Rect rect = { pos.x * 50 - 2, pos.y * 50 + 2,  50, 50 - 4};
+    return rect;
+}
+SDL_Rect rectDown(Vec2c pos) {
+    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50};
+    return rect;
+}
+SDL_Rect rectUp(Vec2c pos) {
+    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
+}
+const SDL_RECT (*rectGens[4])() = {rectRight, rectLeft, rectDown, rectUp};
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
-    SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
-    while (true) {
-        if(*ptr == ctx->snake->getStep(GS_RIGHT))
-        {
-            rect.w += 4;
-            break;
-        }
-        if(*ptr == ctx->snake->getStep(GS_LEFT))
-        {
-            rect.x -= 4;
-            rect.w += 4;
-            break;
-        }
-        if(*ptr == ctx->snake->getStep(GS_DOWN))
-        {
-            rect.h += 4;
-            break;
-        }
-        if(*ptr == ctx->snake->getStep(GS_UP))
-        {
-            rect.y -= 4;
-            rect.h += 4;
-            break;
-        }
-    }
+    SDL_Rect rect = rectGens[Snake.getDirection(*ptr)](pos);
+    // SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
+    // while (true) {
+    //     if(*ptr == ctx->snake->getStep(GS_RIGHT))
+    //     {
+    //         rect.w += 4;
+    //         break;
+    //     }
+    //     if(*ptr == ctx->snake->getStep(GS_LEFT))
+    //     {
+    //         rect.x -= 4;
+    //         rect.w += 4;
+    //         break;
+    //     }
+    //     if(*ptr == ctx->snake->getStep(GS_DOWN))
+    //     {
+    //         rect.h += 4;
+    //         break;
+    //     }
+    //     if(*ptr == ctx->snake->getStep(GS_UP))
+    //     {
+    //         rect.y -= 4;
+    //         rect.h += 4;
+    //         break;
+    //     }
+    // }
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
