@@ -47,12 +47,12 @@ SDL_Rect rectDown(Vec2c pos) {
 SDL_Rect rectUp(Vec2c pos) {
     SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
 }
-const SDL_RECT (*rectGens[4])() = {rectRight, rectLeft, rectDown, rectUp};
+const SDL_Rect (*rectGens[4])() = {rectRight, rectLeft, rectDown, rectUp};
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
-    SDL_Rect rect = rectGens[Snake.getDirection(*ptr)](pos);
+    SDL_Rect rect = rectGens[Snake::getDirection(*ptr)](pos);
     // SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
     // while (true) {
     //     if(*ptr == ctx->snake->getStep(GS_RIGHT))
@@ -211,7 +211,7 @@ int main()
     const int simulate_infinite_loop = 1; // call the function repeatedly
     const int fps = 0;                    // call the function as fast as the browser wants to render (typically 60fps)
 
-    std::cout << "Snake version 0.0.1-1" << std::endl;
+    std::cout << "Snake version 0.0.2" << std::endl;
     emscripten_set_main_loop_arg(mainloop, &ctx, fps, simulate_infinite_loop);
 
     SDL_DestroyRenderer(renderer);
