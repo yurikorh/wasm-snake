@@ -48,7 +48,7 @@ SDL_Rect rectUp(Vec2c pos) {
     SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
     return rect;
 }
-const SDL_Rect (*rectGens[4])(Vec2c pos) = {rectRight, rectLeft, rectDown, rectUp};
+SDL_Rect const(*rectGens[4])(Vec2c pos) = {rectRight, rectLeft, rectDown, rectUp};
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
