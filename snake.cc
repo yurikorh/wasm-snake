@@ -177,7 +177,7 @@ Vec2c Snake::getCoordinate(int8_t *pointer)
     return this->getCoordinate(pointer - this->map);
 }
 
-inline GS_STEP Snake::getStep(GS_DIRECTION dir)
+GS_STEP Snake::getStep(GS_DIRECTION dir)
 {
     return this->steps[dir];
 }
