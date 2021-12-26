@@ -1,23 +1,22 @@
 #include "web.hh"
 
-static gs_step steps[4];
-gs_step input()
+GS_DIRECTION input()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
         if(event.type == SDL_KEYDOWN)
         {
-            int32_t index = event.key.keysym.sym - SDLK_RIGHT;
-            if(index >= 0 && index < 4)
+            int32_t code = event.key.keysym.sym - SDLK_RIGHT;
+            if(code >= 0 && code < 4)
             {
                 // 0: right 1: left 2: down 3: up
-                return steps[index];
+                return GS_DIRECTION(code);
             }
         }
     }
 
-    return 0;
+    return GS_NONE;
 
 }
 
@@ -190,8 +189,8 @@ void mainloop(void *arg)
     if (ctx->now - ctx->start > ctx->duration)
     {
         ctx->start = ctx->now;
-        gs_step step = input();
-        ctx->ris = ctx->snake->tick(step);
+        GS_DIRECTION in = input();
+        ctx->ris = ctx->snake->tick(in);
     }
     if (ctx->ris.size() == 0)
     {
@@ -216,11 +215,6 @@ int main()
     SDL_CreateWindowAndRenderer(cols * 50, rows * 50, 0, &window, &renderer);
 
     Snake snake = Snake(cols, rows);
-
-    steps[0] = snake.getStepRight();
-    steps[1] = snake.getStepLeft();
-    steps[2] = snake.getStepDown();
-    steps[3] = snake.getStepUp();
     
     std::vector<RenderIns> Rins = std::vector<RenderIns>();
     int start = SDL_GetTicks();

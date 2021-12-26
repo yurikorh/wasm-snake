@@ -8,6 +8,8 @@ Snake::Snake(int cols, int rows)
 }
 Snake::Snake(int cols, int rows, int length = 3)
 {
+    if (cols <= length)
+        cols = length + 1;
     this->cols = cols;
     this->rows = rows;
     this->mapWidth = 2 << (getBits(cols + 1) - 1);
@@ -31,10 +33,15 @@ Snake::Snake(int cols, int rows, int length = 3)
 
     this->head = this->tail + (length - 1);
 
-    for (int8_t *p = this->tail; p < this->head; ++p)
-        *p = this->getStepRight();
+    this->steps[GS_RIGHT] = 1;
+    this->steps[GS_LEFT] = -1;
+    this->steps[GS_DOWN] = this->mapWidth;
+    this->steps[GS_UP] = -this->mapWidth;
 
-    this->step = this->getStepRight();
+    for (int8_t *p = this->tail; p < this->head; ++p)
+        *p = this->getStep(GS_RIGHT);
+
+    this->step = this->getStep(GS_RIGHT);
 
     initRandomApples(length + 1);
     this->applePos = this->getApple();
@@ -56,12 +63,17 @@ int Snake::getBits(int i)
     return bits;
 }
 
-std::vector<RenderIns> Snake::tick(gs_step input)
+std::vector<RenderIns> Snake::tick(GS_DIRECTION input)
 {
-    if (input && input != this->step && input != -this->step)
+    if (input != GS_NONE)
     {
-        this->step = input;
+        GS_STEP newStep = steps[input];
+        if (newStep != this->step && newStep != -this->step)
+        {
+            this->step = newStep;
+        }
     }
+
     int8_t *headDst = this->head + this->step;
 
     std::vector<RenderIns> res;
@@ -157,9 +169,7 @@ int Snake::size()
 
 Vec2c Snake::getCoordinate(int offset)
 {
-    if (mapWidth > 0)
-        return Vec2c(offset % mapWidth, offset / mapWidth);
-    return Vec2c(0, 0);
+    return Vec2c(offset % mapWidth, offset / mapWidth);
 }
 
 Vec2c Snake::getCoordinate(int8_t *pointer)
@@ -167,22 +177,7 @@ Vec2c Snake::getCoordinate(int8_t *pointer)
     return this->getCoordinate(pointer - this->map);
 }
 
-gs_step Snake::getStepUp()
+inline GS_STEP Snake::getStep(GS_DIRECTION dir)
 {
-    return -this->mapWidth;
-}
-
-gs_step Snake::getStepDown()
-{
-    return this->mapWidth;
-}
-
-gs_step Snake::getStepLeft()
-{
-    return -1;
-}
-
-gs_step Snake::getStepRight()
-{
-    return 1;
+    return this->steps[dir];
 }
