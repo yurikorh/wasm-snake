@@ -50,7 +50,8 @@ SDL_Rect rectUp(Vec2c pos) {
 }
 GS_DIRECTION getDirection(GS_STEP step)
 {
-    return GS_DIRECTION((step >> 8) | (((~step) * 2) & 2));
+    // return GS_DIRECTION((step >> 8) | (((~step) * 2) & 2));
+    return GS_DIRECTION((step > 0 ? 0 : 1) + (step % 2 == 0 ? 2 : 0));
 }
 SDL_Rect (*rectGens[4])(Vec2c pos) = {rectRight, rectLeft, rectDown, rectUp};
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
