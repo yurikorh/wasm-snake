@@ -39,23 +39,23 @@ void drawBody(context *ctx, int8_t *ptr, Scalar s)
     Vec2c pos = ctx->snake->getCoordinate(ptr);
     SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
     while (true) {
-        if(*ptr == ctx->snake->getStep(GS_RIGHT))
+        if(*ptr == static_cast<int8_t>(ctx->snake->getStep(GS_RIGHT)))
         {
             rect.w += 2;
             break;
         }
-        if(*ptr == ctx->snake->getStep(GS_LEFT))
+        if(*ptr == static_cast<int8_t>(ctx->snake->getStep(GS_LEFT)))
         {
             rect.x -= 2;
             rect.w += 2;
             break;
         }
-        if(*ptr == ctx->snake->getStep(GS_DOWN))
+        if(*ptr == static_cast<int8_t>(ctx->snake->getStep(GS_DOWN)))
         {
             rect.h += 2;
             break;
         }
-        if(*ptr == ctx->snake->getStep(GS_UP))
+        if(*ptr == static_cast<int8_t>(ctx->snake->getStep(GS_UP)))
         {
             rect.y -= 2;
             rect.h += 2;
