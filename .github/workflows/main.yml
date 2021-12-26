@@ -22,6 +22,7 @@ jobs:
       # 编译emsdk
       - name: build emsdk
         run: |
+          pwd
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
@@ -29,7 +30,7 @@ jobs:
       # 编译项目
       - name: build snake
         run: |
-          cd ..
+          pwd
           ./build.sh
       # install文件夹改名linux，并使用7z压缩
       - name: 7zip
