@@ -32,67 +32,90 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
-static int8_t lastdir;
+// static int8_t lastdir;
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
-    SDL_Rect rect = {pos.x * 50, pos.y * 50, 50, 50};
-    int8_t dir = *ptr;
-    if (dir == lastdir)
-    {
-        if (dir == 1 || dir == -1)
+    SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
+    while (true) {
+        if(*ptr == ctx->snake->getStep(GS_RIGHT))
         {
-            rect.y += 2;
-            rect.h -= 4;
+            rect.w += 2;
+            break;
         }
-        else
+        if(*ptr == ctx->snake->getStep(GS_LEFT))
         {
-            rect.x += 2;
-            rect.w -= 4;
+            rect.x -= 2;
+            rect.w += 2;
+            break;
+        }
+        if(*ptr == ctx->snake->getStep(GS_DOWN))
+        {
+            rect.h += 2;
+            break;
+        }
+        if(*ptr == ctx->snake->getStep(GS_UP))
+        {
+            rect.y -= 2;
+            rect.h += 2;
+            break;
         }
     }
-    else
-    {
-        if (lastdir == -1)
-        {
-            rect.x += 2;
-            rect.w -= 2;
-        }
-        else if (lastdir == 1)
-        {
-            rect.w -= 2;
-        }
-        else if (lastdir < -1)
-        {
-            rect.y += 2;
-            rect.h -= 2;
-        }
-        else
-        {
-            rect.h -= 2;
-        }
+    // if (dir == lastdir)
+    // {
+    //     if (dir == 1 || dir == -1)
+    //     {
+    //         rect.y += 2;
+    //         rect.h -= 4;
+    //     }
+    //     else
+    //     {
+    //         rect.x += 2;
+    //         rect.w -= 4;
+    //     }
+    // }
+    // else
+    // {
+    //     if (lastdir == -1)
+    //     {
+    //         rect.x += 2;
+    //         rect.w -= 2;
+    //     }
+    //     else if (lastdir == 1)
+    //     {
+    //         rect.w -= 2;
+    //     }
+    //     else if (lastdir < -1)
+    //     {
+    //         rect.y += 2;
+    //         rect.h -= 2;
+    //     }
+    //     else
+    //     {
+    //         rect.h -= 2;
+    //     }
 
-        if (dir == -1)
-        {
-            rect.w -= 2;
-        }
-        else if (dir == 1)
-        {
-            rect.x += 2;
-            rect.w -= 2;
-        }
-        else if (dir < -1)
-        {
-            rect.h -= 2;
-        }
-        else
-        {
-            rect.y += 2;
-            rect.h -= 2;
-        }
-    }
-    lastdir = dir;
+    //     if (dir == -1)
+    //     {
+    //         rect.w -= 2;
+    //     }
+    //     else if (dir == 1)
+    //     {
+    //         rect.x += 2;
+    //         rect.w -= 2;
+    //     }
+    //     else if (dir < -1)
+    //     {
+    //         rect.h -= 2;
+    //     }
+    //     else
+    //     {
+    //         rect.y += 2;
+    //         rect.h -= 2;
+    //     }
+    // }
+    // lastdir = dir;
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
@@ -154,7 +177,7 @@ void drawSnake(context *ctx)
     Scalar HeadColor = Scalar(255, 135, 202);
 
     int8_t *ptr = ctx->snake->tail;
-    lastdir = *ptr;
+    // lastdir = *ptr;
     while (ptr != ctx->snake->head)
     {
         drawBody(ctx, ptr, bodyColor);
@@ -224,6 +247,7 @@ int main()
     const int simulate_infinite_loop = 1; // call the function repeatedly
     const int fps = 0;                    // call the function as fast as the browser wants to render (typically 60fps)
 
+    std::cout << "Snake version 0.0.1-1" << std::endl;
     emscripten_set_main_loop_arg(mainloop, &ctx, fps, simulate_infinite_loop);
 
     SDL_DestroyRenderer(renderer);
