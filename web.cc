@@ -62,60 +62,6 @@ void drawBody(context *ctx, int8_t *ptr, Scalar s)
             break;
         }
     }
-    // if (dir == lastdir)
-    // {
-    //     if (dir == 1 || dir == -1)
-    //     {
-    //         rect.y += 2;
-    //         rect.h -= 4;
-    //     }
-    //     else
-    //     {
-    //         rect.x += 2;
-    //         rect.w -= 4;
-    //     }
-    // }
-    // else
-    // {
-    //     if (lastdir == -1)
-    //     {
-    //         rect.x += 2;
-    //         rect.w -= 2;
-    //     }
-    //     else if (lastdir == 1)
-    //     {
-    //         rect.w -= 2;
-    //     }
-    //     else if (lastdir < -1)
-    //     {
-    //         rect.y += 2;
-    //         rect.h -= 2;
-    //     }
-    //     else
-    //     {
-    //         rect.h -= 2;
-    //     }
-
-    //     if (dir == -1)
-    //     {
-    //         rect.w -= 2;
-    //     }
-    //     else if (dir == 1)
-    //     {
-    //         rect.x += 2;
-    //         rect.w -= 2;
-    //     }
-    //     else if (dir < -1)
-    //     {
-    //         rect.h -= 2;
-    //     }
-    //     else
-    //     {
-    //         rect.y += 2;
-    //         rect.h -= 2;
-    //     }
-    // }
-    // lastdir = dir;
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
@@ -160,11 +106,13 @@ void drawTail(context *ctx, Scalar s)
     {
         rect.y += 2;
         rect.h -= 4;
+        rect.w += 2;
     }
     else
     {
         rect.x += 2;
         rect.w -= 4;
+        rect.h += 2;
     }
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     SDL_RenderFillRect(ctx->renderer, &rect);
