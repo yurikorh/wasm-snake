@@ -181,3 +181,7 @@ GS_STEP Snake::getStep(GS_DIRECTION dir)
 {
     return this->steps[dir];
 }
+// GS_DIRECTION Snake::getDirection(GS_STEP step)
+// {
+//     return GS_DIRECTION((step >> 8) | (((~step) * 2) & 2));
+// }

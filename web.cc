@@ -48,12 +48,16 @@ SDL_Rect rectUp(Vec2c pos) {
     SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
     return rect;
 }
+GS_DIRECTION getDirection(GS_STEP step)
+{
+    return GS_DIRECTION((step >> 8) | (((~step) * 2) & 2));
+}
 SDL_Rect (*rectGens[4])(Vec2c pos) = {rectRight, rectLeft, rectDown, rectUp};
 void drawBody(context *ctx, int8_t *ptr, Scalar s)
 {
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
-    SDL_Rect rect = rectGens[Snake::getDirection(*ptr)](pos);
+    SDL_Rect rect = rectGens[getDirection(*ptr)](pos);
     // SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
     // while (true) {
     //     if(*ptr == ctx->snake->getStep(GS_RIGHT))
