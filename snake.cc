@@ -79,8 +79,8 @@ std::vector<RenderIns> Snake::tick(GS_DIRECTION input)
     std::vector<RenderIns> res;
     if (*headDst == Apple)
     {
+        // eat apple
         res.push_back(this->moveHead(headDst));
-
         res.push_back(RenderIns(this->getCoordinate(this->tail), this->getCoordinate(this->tail)));
 
         this->applePos = this->getApple();
@@ -100,8 +100,6 @@ std::vector<RenderIns> Snake::tick(GS_DIRECTION input)
 
 RenderIns Snake::moveHead(int8_t *dst)
 {
-    // std::cout << "Input Mat of tick(): " << std::endl;
-    // std::cout << *(this) << std::endl;
     RenderIns headIns = RenderIns(
         this->getCoordinate(this->head),
         this->getCoordinate(dst));
@@ -143,20 +141,19 @@ Vec2c Snake::getApple()
 {
     int appleIndex = *(this->nextApple);
     this->nextApple++;
+    int8_t *p = this->map;
     for (int y = 0; y < this->rows; ++y)
     {
         for (int x = 0; x < this->cols; ++x)
         {
-            int offset = y * this->mapWidth + x;
-            if (this->map[offset] == Ground)
+            // int offset = y * this->mapWidth + x;
+            if (*(++p) == Ground && appleIndex-- == 0)
             {
-                if (appleIndex-- == 0)
-                {
-                    this->map[offset] = Apple;
-                    return Vec2c(x, y);
-                }
+                *p = Apple;
+                return Vec2c(x, y);
             }
         }
+        p = p - this->cols + this->mapWidth;
     }
     // should never reach here, if everything works fine
     std::cout << *(this->nextApple - 1) << std::endl;

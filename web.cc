@@ -97,21 +97,23 @@ void drawTail(context *ctx, Scalar s)
     y += renderIns.end.y * current;
     y = y * 50 / duration;
 
-    SDL_Rect rect = {x, y, 50, 50};
-
-
-    if (renderIns.start.y == renderIns.end.y)
-    {
-        rect.y += 2;
-        rect.h -= 4;
-        rect.w += 2;
-    }
-    else
-    {
-        rect.x += 2;
-        rect.w -= 4;
-        rect.h += 2;
-    }
+    // SDL_Rect rect = {x, y, 50, 50};
+    // right: 0, left: 1, down: 3, up: 4
+    GS_DIRECTION dir = GS_DIRECTION(renderIns.start.y == renderIns.end.y ?
+        (renderIns.start.x > renderIns.end.x ? 1 : 0):(2 + renderIns.start.y > renderIns.end.y ? 0 : 1));
+    SDL_Rect rect = rects[dir](Vec2c(x, y));
+    // if ()
+    // {
+    //     rect.y += 2;
+    //     rect.h -= 4;
+    //     rect.w += 2;
+    // }
+    // else
+    // {
+    //     rect.x += 2;
+    //     rect.w -= 4;
+    //     rect.h += 2;
+    // }
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
