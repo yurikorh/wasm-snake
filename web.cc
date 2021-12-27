@@ -59,31 +59,6 @@ void drawBody(context *ctx, int8_t *ptr, Scalar s)
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     Vec2c pos = ctx->snake->getCoordinate(ptr);
     SDL_Rect rect = rectGens[getDirection(*ptr)](pos);
-    // SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50 - 4};
-    // while (true) {
-    //     if(*ptr == ctx->snake->getStep(GS_RIGHT))
-    //     {
-    //         rect.w += 4;
-    //         break;
-    //     }
-    //     if(*ptr == ctx->snake->getStep(GS_LEFT))
-    //     {
-    //         rect.x -= 4;
-    //         rect.w += 4;
-    //         break;
-    //     }
-    //     if(*ptr == ctx->snake->getStep(GS_DOWN))
-    //     {
-    //         rect.h += 4;
-    //         break;
-    //     }
-    //     if(*ptr == ctx->snake->getStep(GS_UP))
-    //     {
-    //         rect.y -= 4;
-    //         rect.h += 4;
-    //         break;
-    //     }
-    // }
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
@@ -124,7 +99,8 @@ void drawTail(context *ctx, Scalar s)
 
     SDL_Rect rect = {x, y, 50, 50};
 
-    if (*(ctx->snake->tail) == 1 || *(ctx->snake->tail) == -1)
+
+    if (renderIns.start.y == renderIns.end.y)
     {
         rect.y += 2;
         rect.h -= 4;
@@ -211,13 +187,13 @@ int main()
     
     std::vector<RenderIns> Rins = std::vector<RenderIns>();
     int start = SDL_GetTicks();
-    int duration = 175;
+    int duration = 125;
     context ctx = {renderer, &snake, Rins, start, start, duration};
 
     const int simulate_infinite_loop = 1; // call the function repeatedly
     const int fps = 0;                    // call the function as fast as the browser wants to render (typically 60fps)
 
-    std::cout << "Snake version 0.0.2" << std::endl;
+    std::cout << "Snake version 0.0.2-1" << std::endl;
     emscripten_set_main_loop_arg(mainloop, &ctx, fps, simulate_infinite_loop);
 
     SDL_DestroyRenderer(renderer);
