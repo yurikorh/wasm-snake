@@ -147,13 +147,13 @@ Vec2c Snake::getApple()
         for (int x = 0; x < this->cols; ++x)
         {
             // int offset = y * this->mapWidth + x;
-            if (*(++p) == Ground && appleIndex-- == 0)
+            if (p[x] == Ground && appleIndex-- == 0)
             {
-                *p = Apple;
+                p[x] = Apple;
                 return Vec2c(x, y);
             }
         }
-        p = p - this->cols + this->mapWidth;
+        p += this->mapWidth;
     }
     // should never reach here, if everything works fine
     std::cout << *(this->nextApple - 1) << std::endl;
