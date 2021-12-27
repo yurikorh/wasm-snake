@@ -101,7 +101,7 @@ void drawTail(context *ctx, Scalar s)
     // right: 0, left: 1, down: 3, up: 4
     GS_DIRECTION dir = GS_DIRECTION(renderIns.start.y == renderIns.end.y ?
         (renderIns.start.x > renderIns.end.x ? 1 : 0):(2 + renderIns.start.y > renderIns.end.y ? 0 : 1));
-    SDL_Rect rect = rects[dir](Vec2c(x, y));
+    SDL_Rect rect = rectGens[dir](Vec2c(x, y));
     // if ()
     // {
     //     rect.y += 2;
