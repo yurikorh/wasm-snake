@@ -92,17 +92,19 @@ void drawTail(context *ctx, Scalar s)
     int duration = ctx->duration;
     int x = renderIns.start.x * (duration - current);
     x += renderIns.end.x * current;
-    x = x * 50 / duration;
+    // x = x * 50 / duration;
+    x /= duration;
     int y = renderIns.start.y * (duration - current);
     y += renderIns.end.y * current;
-    y = y * 50 / duration;
+    // y = y * 50 / duration;
+    y /= duration;
 
     // SDL_Rect rect = {x, y, 50, 50};
-    // right: 0, left: 1, down: 3, up: 4
+    // right: 0, left: 1, down: 2, up: 3
     GS_DIRECTION dir = GS_DIRECTION(renderIns.start.y == renderIns.end.y ?
         (renderIns.start.x > renderIns.end.x ? 1 : 0):(2 + renderIns.start.y > renderIns.end.y ? 0 : 1));
     SDL_Rect rect = rectGens[dir](Vec2c(x, y));
-    // if ()
+    // if (renderIns.start.y == renderIns.end.y)
     // {
     //     rect.y += 2;
     //     rect.h -= 4;
