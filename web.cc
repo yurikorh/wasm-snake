@@ -5,10 +5,10 @@ GS_DIRECTION input()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        if(event.type == SDL_KEYDOWN)
+        if (event.type == SDL_KEYDOWN)
         {
             int32_t code = event.key.keysym.sym - SDLK_RIGHT;
-            if(code >= 0 && code < 4)
+            if (code >= 0 && code < 4)
             {
                 // 0: right 1: left 2: down 3: up
                 return GS_DIRECTION(code);
@@ -17,7 +17,6 @@ GS_DIRECTION input()
     }
 
     return GS_NONE;
-
 }
 
 void drawApple(context *ctx, Vec2c pos, Scalar s)
@@ -32,20 +31,24 @@ void drawApple(context *ctx, Vec2c pos, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
-SDL_Rect rectRight(Vec2c pos) {
-    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 + 2,  50, 50 - 4};
+SDL_Rect rectRight(Vec2c pos)
+{
+    SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50, 50 - 4};
     return rect;
 }
-SDL_Rect rectLeft(Vec2c pos) {
-    SDL_Rect rect = { pos.x * 50 - 2, pos.y * 50 + 2,  50, 50 - 4};
+SDL_Rect rectLeft(Vec2c pos)
+{
+    SDL_Rect rect = {pos.x * 50 - 2, pos.y * 50 + 2, 50, 50 - 4};
     return rect;
 }
-SDL_Rect rectDown(Vec2c pos) {
-    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50};
+SDL_Rect rectDown(Vec2c pos)
+{
+    SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 + 2, 50 - 4, 50};
     return rect;
 }
-SDL_Rect rectUp(Vec2c pos) {
-    SDL_Rect rect = { pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
+SDL_Rect rectUp(Vec2c pos)
+{
+    SDL_Rect rect = {pos.x * 50 + 2, pos.y * 50 - 2, 50 - 4, 50};
     return rect;
 }
 GS_DIRECTION getDirection(GS_STEP step)
@@ -92,30 +95,30 @@ void drawTail(context *ctx, Scalar s)
     int duration = ctx->duration;
     int x = renderIns.start.x * (duration - current);
     x += renderIns.end.x * current;
-    // x = x * 50 / duration;
-    x /= duration;
+    x = x * 50 / duration;
+
     int y = renderIns.start.y * (duration - current);
     y += renderIns.end.y * current;
-    // y = y * 50 / duration;
-    y /= duration;
+    y = y * 50 / duration;
 
-    // SDL_Rect rect = {x, y, 50, 50};
-    // right: 0, left: 1, down: 2, up: 3
-    GS_DIRECTION dir = GS_DIRECTION(renderIns.start.y == renderIns.end.y ?
-        (renderIns.start.x > renderIns.end.x ? 1 : 0):(2 + renderIns.start.y > renderIns.end.y ? 0 : 1));
-    SDL_Rect rect = rectGens[dir](Vec2c(x, y));
-    // if (renderIns.start.y == renderIns.end.y)
-    // {
-    //     rect.y += 2;
-    //     rect.h -= 4;
-    //     rect.w += 2;
-    // }
-    // else
-    // {
-    //     rect.x += 2;
-    //     rect.w -= 4;
-    //     rect.h += 2;
-    // }
+    SDL_Rect rect = {x, y, 50, 50};
+
+    if (renderIns.start.y == renderIns.end.y)
+    {
+        rect.y += 2;
+        rect.h -= 4;
+        rect.w += 2;
+        if (renderIns.start.x > renderIns.end.x)
+            rect.x -= 2;
+    }
+    else
+    {
+        rect.x += 2;
+        rect.w -= 4;
+        rect.h += 2;
+        if (renderIns.start.y > renderIns.end.y)
+            rect.y -= 2;
+    }
     SDL_SetRenderDrawColor(ctx->renderer, s.r, s.g, s.b, 255);
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
@@ -188,7 +191,7 @@ int main()
     SDL_CreateWindowAndRenderer(cols * 50, rows * 50, 0, &window, &renderer);
 
     Snake snake = Snake(cols, rows);
-    
+
     std::vector<RenderIns> Rins = std::vector<RenderIns>();
     int start = SDL_GetTicks();
     int duration = 125;
