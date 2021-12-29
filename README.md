@@ -4,6 +4,7 @@ Snake in C++ for WebAssembly
 
 This is a primitive greedy snake game demo in C++(ish) to test WebAssembly
 
+![deploy workflow](https://github.com/yurikorh/wasm-snake/actions/workflows/main.yml/badge.svg)
 ## Getting Started
 
 ### Install emscripten
