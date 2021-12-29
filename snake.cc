@@ -68,7 +68,7 @@ std::vector<RenderIns> Snake::tick(GS_DIRECTION input)
     if (input != GS_NONE)
     {
         GS_STEP newStep = steps[input];
-        if (newStep != this->step && newStep != -this->step)
+        if (newStep != -this->step)
         {
             this->step = newStep;
         }
@@ -81,7 +81,7 @@ std::vector<RenderIns> Snake::tick(GS_DIRECTION input)
     {
         // eat apple
         res.push_back(this->moveHead(headDst));
-        res.push_back(RenderIns(this->getCoordinate(this->tail), this->getCoordinate(this->tail)));
+        res.push_back(RenderIns(this->getCoordinate(this->tail), this->getCoordinate(this->tail + *(this->tail))));
 
         this->applePos = this->getApple();
         res.push_back(RenderIns(this->applePos, this->applePos));

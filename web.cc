@@ -65,26 +65,23 @@ void drawBody(context *ctx, int8_t *ptr, Scalar s)
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
-void drawHead(context *ctx, Scalar s0, Scalar s1)
+void drawHead(context *ctx, Scalar s0)
 {
     RenderIns renderIns = ctx->ris[0];
     int current = ctx->now - ctx->start;
     int duration = ctx->duration;
     int x = renderIns.start.x * (duration - current);
     x += renderIns.end.x * current;
-    x = x * 50 / duration;
+    // x = x * 50 / duration;
+    x = x * 50 * ctx->frequency;
+
     int y = renderIns.start.y * (duration - current);
     y += renderIns.end.y * current;
-    y = y * 50 / duration;
+    // y = y * 50 / duration;
+    y = y * 50 * ctx->frequency;
 
     SDL_Rect rect = {x, y, 50, 50};
     SDL_SetRenderDrawColor(ctx->renderer, s0.r, s0.g, s0.b, 255);
-    SDL_RenderFillRect(ctx->renderer, &rect);
-
-    int oldX = renderIns.start.x * 50;
-    int oldY = renderIns.start.y * 50;
-    rect = {oldX, oldY, x - oldX, y - oldY};
-    SDL_SetRenderDrawColor(ctx->renderer, s1.r, s1.g, s1.b, 255);
     SDL_RenderFillRect(ctx->renderer, &rect);
 }
 
@@ -95,11 +92,13 @@ void drawTail(context *ctx, Scalar s)
     int duration = ctx->duration;
     int x = renderIns.start.x * (duration - current);
     x += renderIns.end.x * current;
-    x = x * 50 / duration;
+    // x = x * 50 / duration;
+    x = x * 50 * ctx->frequency;
 
     int y = renderIns.start.y * (duration - current);
     y += renderIns.end.y * current;
-    y = y * 50 / duration;
+    // y = y * 50 / duration;
+    y = y * 50 * ctx->frequency;
 
     SDL_Rect rect = {x, y, 50, 50};
 
@@ -125,23 +124,23 @@ void drawTail(context *ctx, Scalar s)
 
 void drawSnake(context *ctx)
 {
-    Scalar bodyColor = Scalar(255, 196, 225);
-    Scalar appleColor = Scalar(238, 215, 206);
-    Scalar HeadColor = Scalar(255, 135, 202);
+    const Scalar bodyColor = Scalar(255, 196, 225);
+    const Scalar appleColor = Scalar(238, 215, 206);
+    const Scalar HeadColor = Scalar(255, 135, 202);
 
-    int8_t *ptr = ctx->snake->tail;
-    // lastdir = *ptr;
-    while (ptr != ctx->snake->head)
+    for(int8_t *ptr = ctx->snake->tail; ptr != ctx->snake->head; ptr += *ptr)
     {
         drawBody(ctx, ptr, bodyColor);
-        ptr += *ptr;
     }
 
     drawApple(ctx, ctx->snake->applePos, appleColor);
 
-    drawHead(ctx, HeadColor, bodyColor);
-
-    drawTail(ctx, bodyColor);
+    drawHead(ctx, HeadColor);
+    // if(ctx->ris.size() == 2)
+    {
+        drawTail(ctx, bodyColor);
+    }
+    
 }
 void draw(context *ctx)
 {
@@ -194,13 +193,14 @@ int main()
 
     std::vector<RenderIns> Rins = std::vector<RenderIns>();
     int start = SDL_GetTicks();
-    int duration = 125;
-    context ctx = {renderer, &snake, Rins, start, start, duration};
+    int duration = 150;
+    float frequency = 1.0f / duration;
+    context ctx = {renderer, &snake, Rins, start, start, duration, frequency};
 
     const int simulate_infinite_loop = 1; // call the function repeatedly
     const int fps = 0;                    // call the function as fast as the browser wants to render (typically 60fps)
 
-    std::cout << "Snake version 0.0.2-1" << std::endl;
+    std::cout << "Snake version 0.1.0" << std::endl;
     emscripten_set_main_loop_arg(mainloop, &ctx, fps, simulate_infinite_loop);
 
     SDL_DestroyRenderer(renderer);

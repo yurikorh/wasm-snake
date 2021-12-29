@@ -10,6 +10,7 @@ typedef struct
     int start;
     int now;
     int duration;
+    float frequency;
 } context;
 
 struct Scalar
