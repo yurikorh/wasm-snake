@@ -12,8 +12,9 @@ Snake::Snake(int cols, int rows, int length = 3)
         cols = length + 1;
     this->cols = cols;
     this->rows = rows;
-    this->mapWidth = 2 << (getBits(cols + 1) - 1);
+    this->mapWidth = 2 << getBits(cols + 1);
 
+    std::cout << "game cols: " << cols << " ,map width: " << (int)this->mapWidth << std::endl;
     int mapSize = mapWidth * (rows + 2);
 
     // this->map = new int8_t[mapSize];
@@ -55,11 +56,9 @@ Snake::~Snake()
 int Snake::getBits(int i)
 {
     int bits = 0;
-    while (i)
-    {
-        i >>= 1;
-        bits++;
-    }
+    // wasm: I64Clz
+    // amd64: bsrl
+    bits = __builtin_clz(i) ^ 31;
     return bits;
 }
 
